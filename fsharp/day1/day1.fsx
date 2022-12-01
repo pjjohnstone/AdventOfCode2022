@@ -30,4 +30,10 @@ let getElves lines =
         getElvesRec [] ((spawnElf lines)::elves)
   getElvesRec lines []
 
-printfn "%A" (getElves lines)
+let sumCalories elves =
+  elves
+  |> List.map (fun e -> List.sum e.Items)
+
+let elves = getElves lines
+
+printfn "The elf with the most calories is carrying %i calories" (sumCalories elves |> List.sortDescending |> List.head)
