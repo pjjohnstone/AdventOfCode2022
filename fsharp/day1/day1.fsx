@@ -1,6 +1,6 @@
 open System.IO
 
-let lines = File.ReadAllLines("fsharp/day1/test.txt") |> Array.toList
+let lines = File.ReadAllLines("fsharp/day1/input.txt") |> Array.toList
 
 let indexOfSpace (lines: string list) =
   lines |> List.findIndex (fun l -> String.length l < 1)
@@ -37,3 +37,5 @@ let sumCalories elves =
 let elves = getElves lines
 
 printfn "The elf with the most calories is carrying %i calories" (sumCalories elves |> List.sortDescending |> List.head)
+
+printfn "The three elves carrying the most calories are carrying %i calories" (sumCalories elves |> List.sortDescending |> List.take 3 |> List.sum)
