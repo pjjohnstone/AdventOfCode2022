@@ -6,6 +6,7 @@ type Shape = {
   Name: string
   Value: int
   Beats: string
+  Loses: string
 }
 
 let (opMove, yourMove) =
@@ -17,13 +18,24 @@ let (opMove, yourMove) =
 
 let makeShape char =
   match char with
-  | 'A' | 'X' -> { Name = "Rock"; Value = 1; Beats = "Scissors" }
-  | 'B' | 'Y' -> { Name = "Paper"; Value = 2; Beats = "Rock" }
-  | _ -> { Name = "Scissors"; Value = 3; Beats = "Paper" }
+  | 'A' | 'X' -> { Name = "Rock"; Value = 1; Beats = "Scissors"; Loses = "Paper" }
+  | 'B' | 'Y' -> { Name = "Paper"; Value = 2; Beats = "Rock"; Loses = "Scissors" }
+  | _ -> { Name = "Scissors"; Value = 3; Beats = "Paper"; Loses = "Rock" }
 
-let (opShapes, yourShapes) =
-  (opMove, yourMove)
-  |> fun (f,s) -> (f |> List.map makeShape, s |> List.map makeShape)
+let getShapeByName name =
+  match name with
+  | "Rock" -> makeShape 'A'
+  | "Paper" -> makeShape 'B'
+  | _ -> makeShape 'C'
+
+let chooseResponse opShape desiredOutcome =
+  match desiredOutcome with
+  | 'X' -> getShapeByName opShape.Beats
+  | 'Y' -> getShapeByName opShape.Name
+  | _ -> getShapeByName opShape.Loses
+
+let opShapes = List.map makeShape opMove
+let yourShapes = List.map2 chooseResponse opShapes yourMove
 
 let scoreRound opShape yourShape =
   match (opShape.Name = yourShape.Name) with
@@ -35,4 +47,4 @@ let scoreRound opShape yourShape =
 
 let finalScore = List.fold2 (fun acc o y -> acc + scoreRound o y) 0 opShapes yourShapes
 
-printfn "Your final score is: %i" finalScore
+printfn "Final score is: %i" finalScore
