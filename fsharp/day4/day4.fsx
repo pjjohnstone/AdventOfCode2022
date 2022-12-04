@@ -42,6 +42,11 @@ let fullContained (first, second) =
   ||
   second |> List.forall (fun e -> List.contains e first)
 
+let overLapping (first, second) =
+  first |> List.exists (fun e -> List.contains e second)
+
 let pairs = getPairs lines
 let fullyOverlapped =
   pairs |> List.filter fullContained |> List.length
+let anyOverlap =
+  pairs |> List.filter overLapping |> List.length
