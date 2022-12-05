@@ -1,5 +1,11 @@
 open System.IO
 
+type Instruction = {
+  NumberToMove: int
+  SourceStack: int
+  DestinationStack: int
+}
+
 let getCrates (cratesAndNums: string list) =
   cratesAndNums
   |> List.map Seq.toArray
