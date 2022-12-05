@@ -62,7 +62,7 @@ let rowsToStacks rows =
   rowsToStacksRec rows [] |> List.rev |> List.map trimStack |> List.map List.toArray |> List.toArray
 
 let applyInstruction (stacks: char[][]) instruction =
-  let crates = Array.take instruction.NumberToMove stacks[instruction.SourceStack] |> Array.rev
+  let crates = Array.take instruction.NumberToMove stacks[instruction.SourceStack]
   stacks[instruction.DestinationStack] <- Array.concat [crates; stacks[instruction.DestinationStack]]
   stacks[instruction.SourceStack] <- Array.removeManyAt 0 instruction.NumberToMove stacks[instruction.SourceStack]
 
