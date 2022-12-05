@@ -16,6 +16,21 @@ let buildRows crates indices numstacks =
   crates
   |> List.map (fun row -> fullRow row indices numstacks)
 
+let rowsToStacks rows =
+  let rec rowsToStacksRec (rows: char[] list) (stacks: char list list) =
+    match rows with
+    | [] -> stacks
+    | _ ->
+      match (Array.length rows[0] = 0) with
+      | true -> stacks
+      | false ->
+        rows
+        |> List.map (fun row -> Array.take 1 row)
+        |> List.map Array.exactlyOne
+        |> fun stack ->
+          rowsToStacksRec (rows |> List.map (fun a -> Array.removeAt 0 a)) (stack::stacks)
+  rowsToStacksRec rows [] |> List.map List.rev |> List.rev
+
 let usefulIndices = [1;5;9]
 
 let lines = File.ReadAllLines("fsharp/day5/test.txt") |> Array.toList
@@ -34,3 +49,4 @@ let numberOfStacks =
   |> fun c -> int c - int '0'
 
 let rows = buildRows crates usefulIndices numberOfStacks
+let stacks = rowsToStacks rows
