@@ -1,26 +1,36 @@
 open System.IO
 
-let compactRow row =
-  row
-  |> Array.map (fun el ->
-    el
-    |> Array.removeAt 0
-    |> Array.removeAt 1
-    |> Array.take 1)
+let getCrates (cratesAndNums: string list) =
+  cratesAndNums
+  |> List.map Seq.toArray
+  |> List.removeAt (List.length cratesAndNums - 1)
+
+let fullRow (row: char[]) (indices: int list) numStacks =
+  let newRow = Array.create numStacks ' '
+  for i in 0..(numStacks - 1) do
+    if indices[i] < row.Length then
+      newRow[i] <- row[(indices[i])]
+  newRow
+
+let buildRows crates indices numstacks =
+  crates
+  |> List.map (fun row -> fullRow row indices numstacks)
+
+let usefulIndices = [1;5;9]
 
 let lines = File.ReadAllLines("fsharp/day5/test.txt") |> Array.toList
 
-let (crates,instructions) =
+let (crates, stackNumbers, instructions) =
   lines
   |> List.splitAt (List.findIndex (fun (l: string) -> l.Length < 1) lines)
   |> fun (cr, ins) ->
-    ((List.removeAt (List.length cr - 1) cr), (List.removeAt 0 ins))
+    ((getCrates cr), (List.last cr), (List.removeAt 0 ins))
 
-let stacks =
-  crates
-  |> List.map (fun row -> row |> Seq.chunkBySize 4 |> Seq.toArray)
-  |> List.map compactRow
+let numberOfStacks =
+  stackNumbers
+  |> Seq.toArray
+  |> Array.filter (fun c -> System.Char.IsNumber c)
+  |> Array.last
+  |> fun c -> int c - int '0'
 
-printfn "%A" stacks[0]
-printfn "%A" stacks[1]
-printfn "%A" stacks[2]
+let rows = buildRows crates usefulIndices numberOfStacks
