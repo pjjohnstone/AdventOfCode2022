@@ -2,11 +2,11 @@ open System.IO
 
 let compactRow row =
   row
-  |> Seq.filter (fun c -> System.Char.IsLetter c || System.Char.IsNumber c)
-
-let stripSymbols row =
-  row
-  |> Seq.filter (fun c -> not(c = '[' || c = ']'))
+  |> Array.map (fun el ->
+    el
+    |> Array.removeAt 0
+    |> Array.removeAt 1
+    |> Array.take 1)
 
 let lines = File.ReadAllLines("fsharp/day5/test.txt") |> Array.toList
 
@@ -19,6 +19,7 @@ let (crates,instructions) =
 let stacks =
   crates
   |> List.map (fun row -> row |> Seq.chunkBySize 4 |> Seq.toArray)
+  |> List.map compactRow
 
 printfn "%A" stacks[0]
 printfn "%A" stacks[1]
