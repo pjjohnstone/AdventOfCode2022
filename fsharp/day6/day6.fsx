@@ -19,4 +19,4 @@ let findMarker (line: char[]) windowSize =
         findMarkerRec (Array.removeAt 0 line) (index + 1)
   findMarkerRec line 0
 
-let firstMarkers = lines |> List.map (fun line -> findMarker line 4)
+let firstMarkers = lines |> List.map (fun line -> findMarker line 14)
