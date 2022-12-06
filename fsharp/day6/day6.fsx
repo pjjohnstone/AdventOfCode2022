@@ -8,7 +8,7 @@ let lines =
 let isMarker letters =
   if (Array.distinct letters).Length = letters.Length then true else false
 
-let findMarker (line: char[]) windowSize =
+let findMarker windowSize (line: char[])  =
   let rec findMarkerRec (line: char[]) index =
     match line with
     | [||] -> index + windowSize
@@ -19,4 +19,4 @@ let findMarker (line: char[]) windowSize =
         findMarkerRec (Array.removeAt 0 line) (index + 1)
   findMarkerRec line 0
 
-let firstMarkers = lines |> List.map (fun line -> findMarker line 14)
+let firstMarkers = lines |> List.map (findMarker 14)
