@@ -30,7 +30,7 @@ let visible x y (grid: int[,]) =
   then true
   else false
 
-let lines = File.ReadAllLines "fsharp/day8/test.txt"
+let lines = File.ReadAllLines "fsharp/day8/input.txt"
 
 let numbers =
   lines
