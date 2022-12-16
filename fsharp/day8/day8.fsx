@@ -11,8 +11,14 @@ let getRow r (A:_[,]) =
 let visibleFromLeft x y (grid: int[,]) =
   if ((getRow x grid) |> Array.take y |> Array.max) < grid[x,y] then true else false
 
+let visibleFromRight x y (grid: int[,]) =
+  if ((getRow x grid) |> Array.removeManyAt 0 (y + 1) |> Array.max) < grid[x,y] then true else false
+
 let visibleFromTop x y (grid: int[,]) =
   if ((getColumn y grid) |> Array.take x |> Array.max) < grid[x,y] then true else false
+
+let visibleFromBottom x y (grid: int[,]) =
+  if ((getColumn y grid) |> Array.removeManyAt 0 (x + 1) |> Array.max) < grid[x,y] then true else false
 
 let lines = File.ReadAllLines "fsharp/day8/test.txt"
 
@@ -24,7 +30,5 @@ let numbers =
 
 let grid = Array2D.init lines.Length lines[0].Length (fun x y -> numbers[x][y])
 
-let hopefullyTrue = visibleFromLeft 0 3 grid
-let hopefullyFalse = visibleFromLeft 0 2 grid
-let hopefullyTrue2 = visibleFromTop 2 0 grid
-let hopefullyFalse2 = visibleFromTop 1 0 grid
+let hopefullyTrue = visibleFromBottom 2 0 grid
+let hopefullyFalse = visibleFromBottom 2 1 grid
