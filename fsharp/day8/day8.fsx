@@ -42,3 +42,8 @@ let grid = Array2D.init lines.Length lines[0].Length (fun x y -> numbers[x][y])
 
 let hopefullyTrue = visible 2 1 grid
 let hopefullyFalse = visible 1 3 grid
+
+
+let mutable numVisible = 0
+
+grid |> Array2D.iteri (fun x y v -> if visible x y grid then numVisible <- (numVisible + 1))
