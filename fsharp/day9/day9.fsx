@@ -15,13 +15,28 @@ let getIndexOfPiece piece (grid: char[][,]) =
       if isPieceAtPos i j piece grid then result <- (i,j)
   result
 
-let movePiece piece y x (grid: char[][,]) =
-  let (currentY, currentX) = getIndexOfPiece piece grid
-  grid[currentY,currentX] <- grid[currentY,currentX]
+let takePieceFromPos y x piece (grid: char[][,]) =
+  grid[y,x] <- grid[y,x]
   |> Array.toList
   |> List.filter (fun e -> e <> piece)
   |> List.toArray
+
+let putPieceAtPos y x piece (grid: char[][,]) =
   grid[y,x] <- Array.insertAt 0 piece grid[y,x]
+
+let movePiece piece direction (grid: char[][,]) =
+  let (currentY, currentX) = getIndexOfPiece piece grid
+  takePieceFromPos currentY currentX piece grid
+  match direction with
+  | 'D' -> putPieceAtPos (currentY + 1) currentX piece grid
+  | 'U' -> putPieceAtPos (currentY - 1) currentX piece grid
+  | 'L' -> putPieceAtPos currentY (currentX - 1) piece grid
+  | _ -> putPieceAtPos currentY (currentX + 1) piece grid
+  printfn "%A" grid
+
+let runInstruction grid (dir, num) =
+  for _ = 1 to num do
+    movePiece 'H' dir grid
 
 let lines = File.ReadAllLines "fsharp/day9/test.txt" |> Array.toList
 
@@ -32,9 +47,8 @@ let instructions =
     a
     |> Array.pairwise
     |> Array.exactlyOne)
-  |> List.map (fun (d,n) -> (d, int n))
+  |> List.map (fun (d,n) -> ((d |> Seq.toArray |> Array.exactlyOne), int n))
 
 let grid = initGrid 6
 
-getIndexOfPiece 'H' grid
-movePiece 'H' 5 1 grid
+instructions |> List.iter (fun i -> runInstruction grid i)
