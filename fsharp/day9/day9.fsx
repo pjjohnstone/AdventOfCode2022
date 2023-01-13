@@ -38,6 +38,12 @@ let runInstruction grid (dir, num) =
   for _ = 1 to num do
     movePiece 'H' dir grid
 
+let isTailAdjacent grid =
+  let (tailY, tailX) = getIndexOfPiece 'T' grid
+  let (headY, headX) = getIndexOfPiece 'H' grid
+  if headY - tailY > 2 || tailY - headY > 2 || headX - tailX > 2 || tailX - headX > 2 then false
+  else true
+
 let lines = File.ReadAllLines "fsharp/day9/test.txt" |> Array.toList
 
 let instructions =
