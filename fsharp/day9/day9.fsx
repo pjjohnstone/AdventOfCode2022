@@ -3,10 +3,11 @@ open System.IO
 let mutable history = []
 
 let initGrid size =
-  let grid = Array2D.create size size [||]
-  grid[(size - 1),0] <- [|'H'; 'T'; 's'|]
-  history <- ('H',(size - 1,0))::history
-  history <- ('T',(size - 1,0))::history
+  let grid = Array2D.create (size * 2) (size * 2) [||]
+  let (initY,initX) = (size - 1),(size - 1)
+  grid[initY,initX] <- [|'H'; 'T'; 's'|]
+  history <- ('H',(initY, initX))::history
+  history <- ('T',(initY, initX))::history
   grid
 
 let isPieceAtPos y x piece (grid: char[][,]) =
