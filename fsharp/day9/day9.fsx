@@ -27,7 +27,6 @@ let takePieceFromPos y x piece (grid: char[][,]) =
   |> List.toArray
 
 let putPieceAtPos y x piece (grid: char[][,]) =
-  printfn "Putting %c at %i,%i" piece y x
   grid[y,x] <- Array.insertAt 0 piece grid[y,x]
   history <- (piece,(y,x))::history
 
@@ -62,6 +61,16 @@ let runInstruction grid (dir, num) =
     if not (isTailAdjacent grid) then
       makeTailAdjacent dir grid
 
+let maxInDir (instructions: (char * int) list) dir =
+  instructions
+  |> List.filter (fun (d,_) -> d = dir)
+  |> List.map (fun (_,n) -> n)
+  |> List.sum
+
+let maxPossibleSize instructions =
+  let sizes = [(maxInDir instructions 'U'); (maxInDir instructions 'L'); (maxInDir instructions 'R'); (maxInDir instructions 'D')]
+  sizes |> List.max
+
 let lines = File.ReadAllLines "fsharp/day9/input.txt" |> Array.toList
 
 let instructions =
@@ -73,9 +82,7 @@ let instructions =
     |> Array.exactlyOne)
   |> List.map (fun (d,n) -> ((d |> Seq.toArray |> Array.exactlyOne), int n))
 
-let size = (instructions |> List.map (fun (_,i) -> i) |> List.max) * 30
-
-let grid = initGrid size
+let grid = initGrid (maxPossibleSize instructions)
 
 instructions |> List.iter (fun i -> runInstruction grid i)
 
