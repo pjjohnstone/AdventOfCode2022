@@ -62,7 +62,7 @@ let runInstruction grid (dir, num) =
     if not (isTailAdjacent grid) then
       makeTailAdjacent dir grid
 
-let lines = File.ReadAllLines "fsharp/day9/test.txt" |> Array.toList
+let lines = File.ReadAllLines "fsharp/day9/input.txt" |> Array.toList
 
 let instructions =
   lines
@@ -73,7 +73,7 @@ let instructions =
     |> Array.exactlyOne)
   |> List.map (fun (d,n) -> ((d |> Seq.toArray |> Array.exactlyOne), int n))
 
-let size = (instructions |> List.map (fun (_,i) -> i) |> List.max) + 1
+let size = (instructions |> List.map (fun (_,i) -> i) |> List.max) * 30
 
 let grid = initGrid size
 
