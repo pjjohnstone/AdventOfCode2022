@@ -2,12 +2,14 @@ open System.IO
 
 let mutable history = []
 
+let knots = ['1';'2';'3';'4';'5';'6';'7';'8';'9']
+
 let initGrid size =
   let grid = Array2D.create (size * 2) (size * 2) [||]
   let (initY,initX) = (size - 1),(size - 1)
-  grid[initY,initX] <- [|'H'; 'T'; 's'|]
-  history <- ('H',(initY, initX))::history
-  history <- ('T',(initY, initX))::history
+  let startingPieces = Array.append [|'H';'s'|] (List.toArray knots)
+  grid[initY,initX] <- startingPieces
+  startingPieces |> Array.iter (fun p -> history <- (p,(initY, initX))::history)
   grid
 
 let isPieceAtPos y x piece (grid: char[][,]) =
@@ -49,24 +51,27 @@ let isAdjacent headPiece tailPiece grid =
 let isTailAdjacent grid =
   isAdjacent 'H' 'T' grid
 
-let makeAdjacent dir piece grid =
-  let (headY, headX) = getIndexOfPiece 'H' grid
+let makeAdjacent dir headPiece piece grid =
+  let (headY, headX) = getIndexOfPiece headPiece grid
   let (pieceY, pieceX) = getIndexOfPiece piece grid
-  takePieceFromPos pieceY pieceX 'T' grid
+  takePieceFromPos pieceY pieceX piece grid
   match dir with
-  | 'D' -> putPieceAtPos (headY - 1) headX 'T' grid
-  | 'U' -> putPieceAtPos (headY + 1) headX 'T' grid
-  | 'L' -> putPieceAtPos headY (headX + 1) 'T' grid
-  | _ -> putPieceAtPos headY (headX - 1) 'T' grid
+  | 'D' -> putPieceAtPos (headY - 1) headX piece grid
+  | 'U' -> putPieceAtPos (headY + 1) headX piece grid
+  | 'L' -> putPieceAtPos headY (headX + 1) piece grid
+  | _ -> putPieceAtPos headY (headX - 1) piece grid
 
 let makeTailAdjacent dir grid =
-  makeAdjacent dir 'T' grid
+  makeAdjacent dir 'H' 'T' grid
 
 let runInstruction grid (dir, num) =
   for _ = 1 to num do
     movePiece 'H' dir grid
-    if not (isTailAdjacent grid) then
-      makeTailAdjacent dir grid
+    if not (isAdjacent 'H' knots[0] grid) then
+      makeAdjacent dir 'H' knots[0] grid
+    for i = 1 to (knots.Length - 1) do
+      if not (isAdjacent knots[i - 1] knots[i] grid) then
+        makeAdjacent dir knots[i - 1] knots[i] grid
 
 let maxInDir (instructions: (char * int) list) dir =
   instructions
@@ -78,7 +83,7 @@ let maxPossibleSize instructions =
   let sizes = [(maxInDir instructions 'U'); (maxInDir instructions 'L'); (maxInDir instructions 'R'); (maxInDir instructions 'D')]
   sizes |> List.max
 
-let lines = File.ReadAllLines "fsharp/day9/test.txt" |> Array.toList
+let lines = File.ReadAllLines "fsharp/day9/test2.txt" |> Array.toList
 
 let instructions =
   lines
@@ -95,4 +100,4 @@ let grid = initGrid (maxPossibleSize instructions)
 
 instructions |> List.iter (fun i -> runInstruction grid i)
 
-history |> List.filter (fun (p,_) -> p = 'T') |> List.distinct |> List.length
+history |> List.filter (fun (p,_) -> p = knots[knots.Length - 1]) |> List.distinct |> List.length
