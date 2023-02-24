@@ -29,7 +29,7 @@ let takePieceFromPos y x piece (grid: char[][,]) =
   |> List.toArray
 
 let putPieceAtPos y x piece (grid: char[][,]) =
-  printfn "Moving %c to %i,%i" piece y x
+  // printfn "Moving %c to %i,%i" piece y x
   grid[y,x] <- Array.insertAt 0 piece grid[y,x]
   history <- (piece,(y,x))::history
 
@@ -42,14 +42,18 @@ let movePiece piece direction (grid: char[][,]) =
   | 'L' -> putPieceAtPos currentY (currentX - 1) piece grid
   | _ -> putPieceAtPos currentY (currentX + 1) piece grid
 
+let getAdjacentPositions headPiece grid =
+  let (headY, headX) = getIndexOfPiece headPiece grid
+  let mutable positions = [||]
+  for y = -1 to 1 do
+    for x = -1 to 1 do
+      positions <- Array.append positions [|(headY + y, headX + x)|]
+  positions
+
 let isAdjacent headPiece tailPiece grid =
   let (tailPieceY, tailPieceX) = getIndexOfPiece tailPiece grid
-  let (headY, headX) = getIndexOfPiece headPiece grid
-  if headY - tailPieceY > 1 || tailPieceY - headY > 1 || headX - tailPieceX > 1 || tailPieceX - headX > 1 then false
-  else true
-
-let isTailAdjacent grid =
-  isAdjacent 'H' 'T' grid
+  getAdjacentPositions headPiece grid
+  |> Array.exists (fun (y,x) -> y = tailPieceY && x = tailPieceX)
 
 let makeAdjacent dir headPiece piece grid =
   let (headY, headX) = getIndexOfPiece headPiece grid
@@ -60,9 +64,6 @@ let makeAdjacent dir headPiece piece grid =
   | 'U' -> putPieceAtPos (headY + 1) headX piece grid
   | 'L' -> putPieceAtPos headY (headX + 1) piece grid
   | _ -> putPieceAtPos headY (headX - 1) piece grid
-
-let makeTailAdjacent dir grid =
-  makeAdjacent dir 'H' 'T' grid
 
 let runInstruction grid (dir, num) =
   for _ = 1 to num do
@@ -83,6 +84,32 @@ let maxPossibleSize instructions =
   let sizes = [(maxInDir instructions 'U'); (maxInDir instructions 'L'); (maxInDir instructions 'R'); (maxInDir instructions 'D')]
   sizes |> List.max
 
+let printGrid (grid: char[][,]) =
+  printfn "Grid y length is %i" (Array2D.length1 grid)
+  printfn "Grid x length is %i" (Array2D.length2 grid)
+  for y = 0 to Array2D.length1 grid - 1 do
+    for x = 0 to Array2D.length2 grid - 1 do
+      match (grid[y,x].Length > 0) with
+      | true -> printf "%s" (System.String.Concat(grid[y,x]))
+      | false -> printf "."
+    printf "\n"
+
+let isHistoryForPosition y x (historyEntry: (char * (int * int))) =
+  let (_, pos) = historyEntry
+  let (historyY, historyX) = pos
+  if historyY = y && historyX = x then true else false
+
+let searchHistory (history: (char * (int * int)) list) y x =
+  history
+  |> List.filter (fun h -> isHistoryForPosition y x h)
+  |> List.map (fun (v,_) -> v)
+  |> List.toArray
+
+let drawHistory length symbol (history: (char * (int * int)) list) =
+  let historyForSymbol = history |> List.filter (fun (p,_) -> p = symbol)
+  let historyGrid = Array2D.init length length (fun y x -> searchHistory historyForSymbol y x)
+  printGrid historyGrid
+
 let lines = File.ReadAllLines "fsharp/day9/test2.txt" |> Array.toList
 
 let instructions =
@@ -94,10 +121,12 @@ let instructions =
     |> Array.exactlyOne)
   |> List.map (fun (d,n) -> ((d |> Seq.toArray |> Array.exactlyOne), int n))
 
-printfn "Grid size will be: %i" (maxPossibleSize instructions)
-
 let grid = initGrid (maxPossibleSize instructions)
 
 instructions |> List.iter (fun i -> runInstruction grid i)
 
-history |> List.filter (fun (p,_) -> p = knots[knots.Length - 1]) |> List.distinct |> List.length
+drawHistory ((maxPossibleSize instructions) * 2) 'H' history
+drawHistory ((maxPossibleSize instructions) * 2) '1' history
+drawHistory ((maxPossibleSize instructions) * 2) '2' history
+
+printfn "Tail visited %i positions" (history |> List.filter (fun (p,_) -> p = knots[knots.Length - 1]) |> List.distinct |> List.length)
