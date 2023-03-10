@@ -27,21 +27,41 @@ let runInstruction instruction =
   | 0 -> (Some(newInstruction.Value), None)
   | _ -> (None, Some(newInstruction))
 
+let executeCycle register =
+  let processedInstructions =
+    register.Instructions |> List.map (fun i -> runInstruction i)
+  let newXValue =
+    processedInstructions
+    |> List.map (fun (x,_) -> x)
+    |> List.choose id
+    |> List.sum
+  { X = newXValue; Instructions = processedInstructions |> List.map (fun (_,i) -> i) |> List.choose id }
+
 let processRegister buffer =
-  let rec processRegisterRec buffer register history cycle =
+  let rec processRegisterRec (buffer: Instruction list) register history cycle =
     match buffer with
-    | [] -> history
+    | [] ->
+      match register.Instructions with
+      | [] -> history
+      | _ ->
+        processRegisterRec [] (executeCycle register) ((cycle, register)::history) (cycle + 1)
     | _ ->
-      let processedInstructions =
-        register.Instructions |> List.map (fun i -> runInstruction i)
-      let newXValue =
-        processedInstructions
-        |> List.map (fun (x,_) -> x)
-        |> List.choose id
-        |> List.sum
-      let newInstructions = (processedInstructions |> List.map (fun (_,i) -> i) |> List.choose id)@([buffer.Head])
-      processRegisterRec buffer.Tail { X = newXValue; Instructions = newInstructions} ((cycle, register)::history) (cycle + 1)
+      processRegisterRec buffer.Tail (executeCycle { register with Instructions = register.Instructions@buffer }) ((cycle, register)::history) (cycle + 1)
   processRegisterRec buffer { X = 0; Instructions = []} [] 0
+
+let prettyPrintRegisterState state =
+  let mutable string = ""
+  for instruction in state.Instructions do
+    string <- string + $" {instruction.Label} {instruction.Value} {instruction.CyclesRemain}"
+  printfn "X: %i Instructions: %s" state.X string
+
+let getStateAtCycle (history: (int * RegisterState) list) cycle =
+  history
+  |> List.filter (fun (c,_) -> c = cycle)
+  |> List.exactlyOne
+  |> fun (c,s) ->
+    printf "Cycle: %i " c
+    prettyPrintRegisterState s
 
 let getValueAtCycle (history: (int * RegisterState) list) cycle =
   history
@@ -53,9 +73,13 @@ let lines = File.ReadAllLines("fsharp/day10/test.txt") |> Array.toList
 let buffer = lines |> List.map parseInstruction
 let history = processRegister buffer
 
+getStateAtCycle history 1
+getStateAtCycle history 2
+getStateAtCycle history 3
 printfn "Value of X at cycle %i was %i" 20 (getValueAtCycle history 20)
 printfn "Value of X at cycle %i was %i" 60 (getValueAtCycle history 60)
-printfn "Value of X at cycle %i was %i" 100 (getValueAtCycle history 100)
-printfn "Value of X at cycle %i was %i" 140 (getValueAtCycle history 140)
-printfn "Value of X at cycle %i was %i" 180 (getValueAtCycle history 180)
-printfn "Value of X at cycle %i was %i" 220 (getValueAtCycle history 220)
+// printfn "Value of X at cycle %i was %i" 100 (getValueAtCycle history 100)
+// printfn "Value of X at cycle %i was %i" 140 (getValueAtCycle history 140)
+// printfn "Value of X at cycle %i was %i" 180 (getValueAtCycle history 180)
+// printfn "Value of X at cycle %i was %i" 220 (getValueAtCycle history 220)
+// printfn "History: %A" history
