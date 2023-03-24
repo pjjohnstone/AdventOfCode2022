@@ -76,7 +76,7 @@ let getValueAtCycle (history: (int * RegisterState) list) cycle =
   |> fun (_,r) -> r.X
 
 let lines = File.ReadAllLines("fsharp/day10/simpletest.txt") |> Array.toList
-let buffer = lines |> List.map parseInstruction
+let buffer = (lines |> List.map parseInstruction)@[{Value = 0; CyclesRemain = 1; Label = "terminator"}]
 let history = processRegister buffer
 
 printfn "%A" history
@@ -86,7 +86,7 @@ getStateAtCycle history 2
 getStateAtCycle history 3
 getStateAtCycle history 4
 getStateAtCycle history 5
-// getStateAtCycle history 6
+getStateAtCycle history 6
 // getStateAtCycle history 7
 // printfn "Value of X at cycle %i was %i" 18 (getValueAtCycle history 18)
 // printfn "Value of X at cycle %i was %i" 19 (getValueAtCycle history 19)
