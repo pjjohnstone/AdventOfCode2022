@@ -75,26 +75,20 @@ let getValueAtCycle (history: (int * RegisterState) list) cycle =
   |> List.exactlyOne
   |> fun (_,r) -> r.X
 
-let lines = File.ReadAllLines("fsharp/day10/simpletest.txt") |> Array.toList
+let signalStrength history cycle =
+  printfn "Signal strength at cycle %i was %i" cycle (getValueAtCycle history cycle * cycle)
+
+let sumSignalStrengths history cycles =
+  let sum =
+    cycles
+    |> List.map (fun c -> getValueAtCycle history c * c)
+    |> List.sum
+  printf "Sum signal strength is %i" sum
+
+let lines = File.ReadAllLines("fsharp/day10/input.txt") |> Array.toList
 let buffer = (lines |> List.map parseInstruction)@[{Value = 0; CyclesRemain = 1; Label = "terminator"}]
 let history = processRegister buffer
+let importantCycles = [20;60;100;140;180;220]
 
-printfn "%A" history
-// getStateAtCycle history 0
-getStateAtCycle history 1
-getStateAtCycle history 2
-getStateAtCycle history 3
-getStateAtCycle history 4
-getStateAtCycle history 5
-getStateAtCycle history 6
-// getStateAtCycle history 7
-// printfn "Value of X at cycle %i was %i" 18 (getValueAtCycle history 18)
-// printfn "Value of X at cycle %i was %i" 19 (getValueAtCycle history 19)
-// printfn "Value of X at cycle %i was %i" 20 (getValueAtCycle history 20)
-// printfn "Value of X at cycle %i was %i" 21 (getValueAtCycle history 21)
-// printfn "Value of X at cycle %i was %i" 22 (getValueAtCycle history 22)
-// printfn "Value of X at cycle %i was %i" 60 (getValueAtCycle history 60)
-// printfn "Value of X at cycle %i was %i" 100 (getValueAtCycle history 100)
-// printfn "Value of X at cycle %i was %i" 140 (getValueAtCycle history 140)
-// printfn "Value of X at cycle %i was %i" 180 (getValueAtCycle history 180)
-// printfn "Value of X at cycle %i was %i" 220 (getValueAtCycle history 220)
+importantCycles |> List.iter (fun c -> signalStrength history c)
+sumSignalStrengths history importantCycles
