@@ -33,5 +33,6 @@ public class Monkey
   {
     if (ThrowingStrategy == null) throw new NoThrowingStrategyException("There is no throwing strategy set!");
     ThrowingStrategy.Throw(Items.First());
+    Items.RemoveAt(0);
   }
 }

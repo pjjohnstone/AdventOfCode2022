@@ -1,11 +1,24 @@
 using AdventOfCode2022.Core.Day11;
 using AdventOfCode2022.Core.Day11.Exceptions;
 using AdventOfCode2022.Core.Day11.InspectionStrategies;
+using Newtonsoft.Json.Linq;
 
 namespace AdventOfCode2022.Test.Day11
 {
   public class MonkeyShould
   {
+    private Monkey _monkey = null!;
+    private Monkey _monkey2 = null!;
+    private Monkey _monkey3 = null!;
+
+    [SetUp]
+    public void SetUp()
+    {
+      _monkey = new Monkey(new List<int>(), 3, new MultiplyStrategy());
+      _monkey2 = new Monkey(new List<int>(), 5, new AddStrategy());
+      _monkey3 = new Monkey(new List<int>(), 5, new AddStrategy());
+    }
+
     [TestCaseSource(nameof(_inspectCases))]
     public void Change_Worry_Level_On_Inspection(List<int> startingValues, int operationValue,
       InspectionStrategy strategy,
@@ -33,23 +46,33 @@ namespace AdventOfCode2022.Test.Day11
     [TestCase(6,false)]
     public void Test_And_Throw_Item(int value, bool result)
     {
-      var monkey = new Monkey(new List<int>{value}, 3, new MultiplyStrategy());
-      var monkey2 = new Monkey(new List<int>(), 5, new AddStrategy());
-      var monkey3 = new Monkey(new List<int>(), 5, new AddStrategy());
-      var strategy = new ThrowingStrategy(5, monkey2, monkey3);
-      monkey.ThrowingStrategy = strategy;
+      _monkey.Catch(value);
+      var strategy = new ThrowingStrategy(5, _monkey2, _monkey3);
+      _monkey.ThrowingStrategy = strategy;
 
-      monkey.Throw();
+      _monkey.Throw();
 
-      Assert.That(monkey2.Items.Contains(value), Is.EqualTo(result));
-      Assert.That(monkey3.Items.Contains(value), Is.Not.EqualTo(result));
+      Assert.That(_monkey2.Items.Contains(value), Is.EqualTo(result));
+      Assert.That(_monkey3.Items.Contains(value), Is.Not.EqualTo(result));
     }
 
     [Test]
     public void Throw_Exception_If_Throw_And_No_Strategy()
     {
-      var monkey = new Monkey(new List<int>(), 1, new MultiplyStrategy());
-      Assert.Throws<NoThrowingStrategyException>(() => monkey.Throw());
+      Assert.Throws<NoThrowingStrategyException>(() => _monkey.Throw());
+    }
+
+    [Test]
+    public void Not_Throw_Items_More_Than_Once()
+    {
+      _monkey.ThrowingStrategy = new ThrowingStrategy(1, _monkey2, _monkey3);
+      _monkey.Catch(1);
+      _monkey.Catch(2);
+
+      _monkey.Throw();
+      _monkey.Throw();
+
+      Assert.That(_monkey2.Items.Distinct().Count(), Is.EqualTo(2));
     }
 
     private static object[] _inspectCases =
