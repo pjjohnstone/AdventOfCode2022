@@ -1,4 +1,5 @@
 using AdventofCode2022.Core.Day11;
+using AdventOfCode2022.Core.Day11;
 
 namespace AdventOfCode2022.Test.Day11
 {
@@ -9,14 +10,21 @@ namespace AdventOfCode2022.Test.Day11
     {
     }
 
-    [Test]
-    public void Change_Worry_Level_On_Inspection()
+    [TestCaseSource(nameof(InspectCases))]
+    public void Change_Worry_Level_On_Inspection(List<int> startingValues, int operationValue, MonkeyStrategy strategy,
+      int resultingWorry)
     {
-      var expectedWorryLevel = 10;
-      var operation = 10;
-      var items = new List<int>{ 1 };
-      var monkey = new Monkey(items, operation);
-      Assert.That(monkey.Items.First(), Is.EqualTo(expectedWorryLevel));
+      var monkey = new Monkey(startingValues, operationValue, strategy);
+
+      monkey.Inspect();
+
+      Assert.That(monkey.Items.First(), Is.EqualTo(resultingWorry));
     }
+
+    public static object[] InspectCases =
+    {
+      new object[] { new List<int> { 1 }, 10, new MultiplyStrategy(), 10 },
+      new object[] { new List<int> { 1 }, 10, new AddStrategy(), 11 }
+    };
   }
 }
