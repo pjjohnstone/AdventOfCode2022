@@ -10,16 +10,15 @@ public class Monkey
   public ThrowingStrategy? ThrowingStrategy { get; set; }
   public List<int> Items { get; }
 
-  public Monkey(List<int> items, int operationValue, InspectionStrategy inspectionStrategy)
+  public Monkey(List<int> items, InspectionStrategy inspectionStrategy)
   {
-    _operationValue = operationValue;
     _inspectionStrategy = inspectionStrategy;
     Items = items;
   }
 
   public void Inspect()
   {
-    var newItemWorry = _inspectionStrategy.Inspect(Items.First(), _operationValue) / 3;
+    var newItemWorry = _inspectionStrategy.Inspect(Items.First()) / 3;
     Items.RemoveAt(0);
     Items.Insert(0, newItemWorry);
   }

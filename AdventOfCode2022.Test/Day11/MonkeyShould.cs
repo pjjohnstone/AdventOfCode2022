@@ -14,17 +14,19 @@ namespace AdventOfCode2022.Test.Day11
     [SetUp]
     public void SetUp()
     {
-      _monkey = new Monkey(new List<int>(), 3, new MultiplyStrategy());
-      _monkey2 = new Monkey(new List<int>(), 5, new AddStrategy());
-      _monkey3 = new Monkey(new List<int>(), 5, new AddStrategy());
+      _monkey = new Monkey(new List<int>(), new MultiplyStrategy(3));
+      _monkey2 = new Monkey(new List<int>(), new AddStrategy(5));
+      _monkey3 = new Monkey(new List<int>(), new AddStrategy(5));
     }
 
     [TestCaseSource(nameof(_inspectCases))]
-    public void Change_Worry_Level_On_Inspection(List<int> startingValues, int operationValue,
+    public void Change_Worry_Level_On_Inspection(
+      List<int> startingValues,
       InspectionStrategy strategy,
-      List<int> resultingWorryValues)
+      List<int> resultingWorryValues
+    )
     {
-      var monkey = new Monkey(startingValues, operationValue, strategy);
+      var monkey = new Monkey(startingValues, strategy);
 
       monkey.Inspect();
 
@@ -34,16 +36,16 @@ namespace AdventOfCode2022.Test.Day11
     [Test]
     public void Catch_An_Item()
     {
-      var expectedItems = new List<int> {1, 2, 3};
-      var monkey = new Monkey(new List<int>{1,2}, 10, new MultiplyStrategy());
+      var expectedItems = new List<int> { 1, 2, 3 };
+      var monkey = new Monkey(new List<int> { 1, 2 }, new MultiplyStrategy(10));
 
       monkey.Catch(3);
 
       Assert.That(monkey.Items, Is.EqualTo(expectedItems));
     }
 
-    [TestCase(5,true)]
-    [TestCase(6,false)]
+    [TestCase(5, true)]
+    [TestCase(6, false)]
     public void Test_And_Throw_Item(int value, bool result)
     {
       _monkey.Catch(value);
@@ -84,8 +86,10 @@ namespace AdventOfCode2022.Test.Day11
 
     private static object[] _inspectCases =
     {
-      new object[] { new List<int> { 1, 2 }, 10, new MultiplyStrategy(), new List<int> { 3, 2 } },
-      new object[] { new List<int> { 1, 2 }, 10, new AddStrategy(), new List<int> { 3, 2 } }
+      new object[] { new List<int> { 1, 2 }, new MultiplyStrategy(10), new List<int> { 3, 2 } },
+      new object[] { new List<int> { 1, 2 }, new AddStrategy(10), new List<int> { 3, 2 } },
+      new object[] { new List<int> { 3, 2 }, new SelfMultiplyStrategy(), new List<int> { 3, 2 } },
+      new object[] { new List<int> { 3, 2 }, new SelfAddStrategy(), new List<int> { 2, 2 } }
     };
   }
 }

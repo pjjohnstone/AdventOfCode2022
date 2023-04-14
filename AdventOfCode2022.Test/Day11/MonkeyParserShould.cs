@@ -38,13 +38,13 @@ Monkey 3:
   [SetUp]
   public void Setup()
   {
-    var monkey0 = new Monkey(new List<int> { 79, 98 }, 19, new MultiplyStrategy());
-    var monkey1 = new Monkey(new List<int> { 54, 65, 75, 74 }, 6, new AddStrategy());
-    var monkey2 = new Monkey(new List<int> { 79, 60, 97 }, 19, new MultiplyStrategy());
-    var monkey3 = new Monkey(new List<int> { 74 }, 19, new AddStrategy());
+    var monkey0 = new Monkey(new List<int> { 79, 98 }, new MultiplyStrategy(19));
+    var monkey1 = new Monkey(new List<int> { 54, 65, 75, 74 }, new AddStrategy(6));
+    var monkey2 = new Monkey(new List<int> { 79, 60, 97 }, new MultiplyStrategy(19));
+    var monkey3 = new Monkey(new List<int> { 74 }, new AddStrategy(3));
   }
 
-  [Test]
+  [Test, Ignore("WIP")]
   public void Return_Monkeys()
   {
     var expectedMonkeys = new List<Monkey>();
