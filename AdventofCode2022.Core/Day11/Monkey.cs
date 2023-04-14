@@ -5,19 +5,20 @@ namespace AdventOfCode2022.Core.Day11;
 public class Monkey
 {
   private readonly int _operationValue;
-  private readonly InspectionStrategy _strategy;
+  private readonly InspectionStrategy _inspectionStrategy;
+  public ThrowingStrategy? ThrowingStrategy { get; set; }
   public List<int> Items { get; }
 
-  public Monkey(List<int> items, int operationValue, InspectionStrategy strategy)
+  public Monkey(List<int> items, int operationValue, InspectionStrategy inspectionStrategy)
   {
     _operationValue = operationValue;
-    _strategy = strategy;
+    _inspectionStrategy = inspectionStrategy;
     Items = items;
   }
 
   public void Inspect()
   {
-    var newItemWorry = _strategy.Inspect(Items.First(), _operationValue) / 3;
+    var newItemWorry = _inspectionStrategy.Inspect(Items.First(), _operationValue) / 3;
     Items.RemoveAt(0);
     Items.Insert(0, newItemWorry);
   }
@@ -25,5 +26,10 @@ public class Monkey
   public void Catch(int itemValue)
   {
     Items.Add(itemValue);
+  }
+
+  public void Throw()
+  {
+    ThrowingStrategy.Throw(Items.First());
   }
 }

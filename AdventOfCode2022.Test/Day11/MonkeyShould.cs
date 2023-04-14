@@ -28,6 +28,22 @@ namespace AdventOfCode2022.Test.Day11
       Assert.That(monkey.Items, Is.EqualTo(expectedItems));
     }
 
+    [TestCase(5,true)]
+    [TestCase(6,false)]
+    public void Test_And_Throw_Item(int value, bool result)
+    {
+      var monkey = new Monkey(new List<int>{value}, 3, new MultiplyStrategy());
+      var monkey2 = new Monkey(new List<int>(), 5, new AddStrategy());
+      var monkey3 = new Monkey(new List<int>(), 5, new AddStrategy());
+      var strategy = new ThrowingStrategy(5, monkey2, monkey3);
+      monkey.ThrowingStrategy = strategy;
+
+      monkey.Throw();
+
+      Assert.That(monkey2.Items.Contains(value), Is.EqualTo(result));
+      Assert.That(monkey3.Items.Contains(value), Is.Not.EqualTo(result));
+    }
+
     private static object[] _inspectCases =
     {
       new object[] { new List<int> { 1, 2 }, 10, new MultiplyStrategy(), new List<int> { 3, 2 } },
