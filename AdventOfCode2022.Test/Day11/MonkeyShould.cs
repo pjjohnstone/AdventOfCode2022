@@ -52,8 +52,11 @@ namespace AdventOfCode2022.Test.Day11
 
       _monkey.Throw();
 
-      Assert.That(_monkey2.Items.Contains(value), Is.EqualTo(result));
-      Assert.That(_monkey3.Items.Contains(value), Is.Not.EqualTo(result));
+      Assert.Multiple(() =>
+      {
+        Assert.That(_monkey2.Items.Contains(value), Is.EqualTo(result));
+        Assert.That(_monkey3.Items.Contains(value), Is.Not.EqualTo(result));
+      });
     }
 
     [Test]
@@ -72,7 +75,11 @@ namespace AdventOfCode2022.Test.Day11
       _monkey.Throw();
       _monkey.Throw();
 
-      Assert.That(_monkey2.Items.Distinct().Count(), Is.EqualTo(2));
+      Assert.Multiple(() =>
+      {
+        Assert.That(_monkey2.Items.Distinct().Count(), Is.EqualTo(2));
+        Assert.That(_monkey.Items.Count, Is.EqualTo(0));
+      });
     }
 
     private static object[] _inspectCases =
