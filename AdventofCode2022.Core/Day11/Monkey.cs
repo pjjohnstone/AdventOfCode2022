@@ -21,4 +21,9 @@ public class Monkey
     Items.RemoveAt(0);
     Items.Insert(0, newItemWorry);
   }
+
+  public void Catch(int itemValue)
+  {
+    Items.Add(itemValue);
+  }
 }

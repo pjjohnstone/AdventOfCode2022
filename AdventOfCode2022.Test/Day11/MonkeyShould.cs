@@ -5,26 +5,33 @@ namespace AdventOfCode2022.Test.Day11
 {
   public class MonkeyShould
   {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
-    [TestCaseSource(nameof(InspectCases))]
-    public void Change_Worry_Level_On_Inspection(List<int> startingValues, int operationValue, InspectionStrategy strategy,
-      int resultingWorry)
+    [TestCaseSource(nameof(_inspectCases))]
+    public void Change_Worry_Level_On_Inspection(List<int> startingValues, int operationValue,
+      InspectionStrategy strategy,
+      List<int> resultingWorryValues)
     {
       var monkey = new Monkey(startingValues, operationValue, strategy);
 
       monkey.Inspect();
 
-      Assert.That(monkey.Items.First(), Is.EqualTo(resultingWorry));
+      Assert.That(monkey.Items, Is.EqualTo(resultingWorryValues));
     }
 
-    public static object[] InspectCases =
+    [Test]
+    public void Catch_An_Item()
     {
-      new object[] { new List<int> { 1 }, 10, new MultiplyStrategy(), 3 },
-      new object[] { new List<int> { 1 }, 10, new AddStrategy(), 3 }
+      var expectedItems = new List<int> {1, 2, 3};
+      var monkey = new Monkey(new List<int>{1,2}, 10, new MultiplyStrategy());
+
+      monkey.Catch(3);
+
+      Assert.That(monkey.Items, Is.EqualTo(expectedItems));
+    }
+
+    private static object[] _inspectCases =
+    {
+      new object[] { new List<int> { 1, 2 }, 10, new MultiplyStrategy(), new List<int> { 3, 2 } },
+      new object[] { new List<int> { 1, 2 }, 10, new AddStrategy(), new List<int> { 3, 2 } }
     };
   }
 }
