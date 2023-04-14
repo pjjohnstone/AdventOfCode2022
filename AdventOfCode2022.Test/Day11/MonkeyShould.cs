@@ -1,4 +1,5 @@
 using AdventOfCode2022.Core.Day11;
+using AdventOfCode2022.Core.Day11.Exceptions;
 using AdventOfCode2022.Core.Day11.InspectionStrategies;
 
 namespace AdventOfCode2022.Test.Day11
@@ -42,6 +43,13 @@ namespace AdventOfCode2022.Test.Day11
 
       Assert.That(monkey2.Items.Contains(value), Is.EqualTo(result));
       Assert.That(monkey3.Items.Contains(value), Is.Not.EqualTo(result));
+    }
+
+    [Test]
+    public void Throw_Exception_If_Throw_And_No_Strategy()
+    {
+      var monkey = new Monkey(new List<int>(), 1, new MultiplyStrategy());
+      Assert.Throws<NoThrowingStrategyException>(() => monkey.Throw());
     }
 
     private static object[] _inspectCases =

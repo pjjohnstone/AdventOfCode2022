@@ -1,3 +1,4 @@
+using AdventOfCode2022.Core.Day11.Exceptions;
 using AdventOfCode2022.Core.Day11.InspectionStrategies;
 
 namespace AdventOfCode2022.Core.Day11;
@@ -30,6 +31,7 @@ public class Monkey
 
   public void Throw()
   {
+    if (ThrowingStrategy == null) throw new NoThrowingStrategyException("There is no throwing strategy set!");
     ThrowingStrategy.Throw(Items.First());
   }
 }
