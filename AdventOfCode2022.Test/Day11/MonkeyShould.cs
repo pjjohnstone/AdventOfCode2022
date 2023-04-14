@@ -1,5 +1,5 @@
-using AdventofCode2022.Core.Day11;
 using AdventOfCode2022.Core.Day11;
+using AdventOfCode2022.Core.Day11.InspectionStrategies;
 
 namespace AdventOfCode2022.Test.Day11
 {
@@ -11,7 +11,7 @@ namespace AdventOfCode2022.Test.Day11
     }
 
     [TestCaseSource(nameof(InspectCases))]
-    public void Change_Worry_Level_On_Inspection(List<int> startingValues, int operationValue, MonkeyStrategy strategy,
+    public void Change_Worry_Level_On_Inspection(List<int> startingValues, int operationValue, InspectionStrategy strategy,
       int resultingWorry)
     {
       var monkey = new Monkey(startingValues, operationValue, strategy);
@@ -23,8 +23,8 @@ namespace AdventOfCode2022.Test.Day11
 
     public static object[] InspectCases =
     {
-      new object[] { new List<int> { 1 }, 10, new MultiplyStrategy(), 10 },
-      new object[] { new List<int> { 1 }, 10, new AddStrategy(), 11 }
+      new object[] { new List<int> { 1 }, 10, new MultiplyStrategy(), 3 },
+      new object[] { new List<int> { 1 }, 10, new AddStrategy(), 3 }
     };
   }
 }

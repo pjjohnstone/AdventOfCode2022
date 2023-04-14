@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode2022", "AdventOfCode2022.csproj", "{333164B8-542F-4CC3-A48E-9F845478E8BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventofCode2022.Core", "..\AdventofCode2022.Core\AdventofCode2022.Core.csproj", "{F8B37FFF-F4BA-4174-BC9A-DE26453B0131}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode2022.Core", "..\AdventofCode2022.Core\AdventOfCode2022.Core.csproj", "{F8B37FFF-F4BA-4174-BC9A-DE26453B0131}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventOfCode2022.Test", "..\AdventOfCode2022.Test\AdventOfCode2022.Test.csproj", "{78922F86-AD72-42BD-B3A4-B529CB5A8F60}"
 EndProject
