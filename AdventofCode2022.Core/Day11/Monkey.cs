@@ -9,11 +9,13 @@ public class Monkey
   private readonly InspectionStrategy _inspectionStrategy;
   public ThrowingStrategy? ThrowingStrategy { get; set; }
   public List<int> Items { get; }
+  public int Number { get; }
 
-  public Monkey(List<int> items, InspectionStrategy inspectionStrategy)
+  public Monkey(int number, List<int> items, InspectionStrategy inspectionStrategy)
   {
     _inspectionStrategy = inspectionStrategy;
     Items = items;
+    Number = number;
   }
 
   public void Inspect()

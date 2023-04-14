@@ -14,9 +14,9 @@ namespace AdventOfCode2022.Test.Day11
     [SetUp]
     public void SetUp()
     {
-      _monkey = new Monkey(new List<int>(), new MultiplyStrategy(3));
-      _monkey2 = new Monkey(new List<int>(), new AddStrategy(5));
-      _monkey3 = new Monkey(new List<int>(), new AddStrategy(5));
+      _monkey = new Monkey(0, new List<int>(), new MultiplyStrategy(3));
+      _monkey2 = new Monkey(0, new List<int>(), new AddStrategy(5));
+      _monkey3 = new Monkey(0, new List<int>(), new AddStrategy(5));
     }
 
     [TestCaseSource(nameof(_inspectCases))]
@@ -26,7 +26,7 @@ namespace AdventOfCode2022.Test.Day11
       List<int> resultingWorryValues
     )
     {
-      var monkey = new Monkey(startingValues, strategy);
+      var monkey = new Monkey(0, startingValues, strategy);
 
       monkey.Inspect();
 
@@ -37,7 +37,7 @@ namespace AdventOfCode2022.Test.Day11
     public void Catch_An_Item()
     {
       var expectedItems = new List<int> { 1, 2, 3 };
-      var monkey = new Monkey(new List<int> { 1, 2 }, new MultiplyStrategy(10));
+      var monkey = new Monkey(0, new List<int> { 1, 2 }, new MultiplyStrategy(10));
 
       monkey.Catch(3);
 
