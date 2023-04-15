@@ -5,11 +5,7 @@ namespace AdventOfCode2022.Core.Day11;
 
 public class Monkey
 {
-  private readonly int _operationValue;
   private readonly InspectionStrategy _inspectionStrategy;
-  public ThrowingStrategy? ThrowingStrategy { get; set; }
-  public List<int> Items { get; }
-  public int Number { get; }
 
   public Monkey(int number, List<int> items, InspectionStrategy inspectionStrategy)
   {
@@ -17,6 +13,10 @@ public class Monkey
     Items = items;
     Number = number;
   }
+
+  public ThrowingStrategy? ThrowingStrategy { get; set; }
+  public List<int> Items { get; }
+  public int Number { get; }
 
   public void Inspect()
   {

@@ -6,6 +6,16 @@ namespace AdventOfCode2022.Test.Day11;
 [TestFixture]
 public class MonkeyParserShould
 {
+  [SetUp]
+  public void Setup()
+  {
+    _monkey0 = new Monkey(0, new List<int> { 79, 98 }, new MultiplyStrategy(19));
+    _monkey1 = new Monkey(1, new List<int> { 54, 65, 75, 74 }, new AddStrategy(6));
+    _monkey2 = new Monkey(2, new List<int> { 79, 60, 97 }, new SelfMultiplyStrategy());
+    _monkey3 = new Monkey(3, new List<int> { 74 }, new AddStrategy(3));
+    _inputArray = SampleText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+  }
+
   private Monkey _monkey0 = null!;
   private Monkey _monkey1 = null!;
   private Monkey _monkey2 = null!;
@@ -40,16 +50,6 @@ Monkey 3:
     If true: throw to monkey 0
     If false: throw to monkey 1";
 
-  [SetUp]
-  public void Setup()
-  {
-    _monkey0 = new Monkey(0, new List<int> { 79, 98 }, new MultiplyStrategy(19));
-    _monkey1 = new Monkey(1, new List<int> { 54, 65, 75, 74 }, new AddStrategy(6));
-    _monkey2 = new Monkey(2, new List<int> { 79, 60, 97 }, new SelfMultiplyStrategy());
-    _monkey3 = new Monkey(3, new List<int> { 74 }, new AddStrategy(3));
-    _inputArray = SampleText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-  }
-
   [Test]
   public void Return_Monkeys()
   {
@@ -61,6 +61,18 @@ Monkey 3:
       _monkey3
     };
 
-    Assert.That(MonkeyParser.Monkeys(_inputArray), Is.EqualTo(expectedMonkeys));
+    var resultingMonkeys = MonkeyParser.Monkeys(_inputArray).ToList();
+
+    Assert.Multiple(() =>
+    {
+      Assert.That(resultingMonkeys[0].Number, Is.EqualTo(expectedMonkeys[0].Number));
+      Assert.That(resultingMonkeys[1].Number, Is.EqualTo(expectedMonkeys[1].Number));
+      Assert.That(resultingMonkeys[2].Number, Is.EqualTo(expectedMonkeys[2].Number));
+      Assert.That(resultingMonkeys[3].Number, Is.EqualTo(expectedMonkeys[3].Number));
+      Assert.That(resultingMonkeys[0].Items, Is.EqualTo(expectedMonkeys[0].Items));
+      Assert.That(resultingMonkeys[1].Items, Is.EqualTo(expectedMonkeys[1].Items));
+      Assert.That(resultingMonkeys[2].Items, Is.EqualTo(expectedMonkeys[2].Items));
+      Assert.That(resultingMonkeys[3].Items, Is.EqualTo(expectedMonkeys[3].Items));
+    });
   }
 }

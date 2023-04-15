@@ -4,7 +4,7 @@ namespace AdventOfCode2022.Core.Day11;
 
 public static class MonkeyParser
 {
-  public static List<Monkey> Monkeys(IEnumerable<string> input)
+  public static IEnumerable<Monkey> Monkeys(IEnumerable<string> input)
   {
     var monkeys = new List<Monkey>();
     var blocks = input.Chunk(6);
