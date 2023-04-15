@@ -53,6 +53,7 @@ Monkey 3:
   [Test]
   public void Return_Monkeys()
   {
+    _monkey0.ThrowingStrategy = new ThrowingStrategy(23, _monkey3, _monkey3);
     var expectedMonkeys = new List<Monkey>
     {
       _monkey0,
@@ -73,6 +74,10 @@ Monkey 3:
       Assert.That(resultingMonkeys[1].Items, Is.EqualTo(expectedMonkeys[1].Items));
       Assert.That(resultingMonkeys[2].Items, Is.EqualTo(expectedMonkeys[2].Items));
       Assert.That(resultingMonkeys[3].Items, Is.EqualTo(expectedMonkeys[3].Items));
+      Assert.NotNull(resultingMonkeys[0].ThrowingStrategy);
+      Assert.NotNull(resultingMonkeys[1].ThrowingStrategy);
+      Assert.NotNull(resultingMonkeys[2].ThrowingStrategy);
+      Assert.NotNull(resultingMonkeys[3].ThrowingStrategy);
     });
   }
 }
