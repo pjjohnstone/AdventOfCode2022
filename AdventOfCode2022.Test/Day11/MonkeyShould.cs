@@ -1,7 +1,6 @@
 using AdventOfCode2022.Core.Day11;
 using AdventOfCode2022.Core.Day11.Exceptions;
 using AdventOfCode2022.Core.Day11.InspectionStrategies;
-using Newtonsoft.Json.Linq;
 
 namespace AdventOfCode2022.Test.Day11
 {
@@ -81,6 +80,22 @@ namespace AdventOfCode2022.Test.Day11
       {
         Assert.That(_monkey2.Items.Distinct().Count(), Is.EqualTo(2));
         Assert.That(_monkey.Items.Count, Is.EqualTo(0));
+      });
+    }
+
+    [Test]
+    public void Take_A_Turn()
+    {
+      _monkey.Items.Add(3);
+      _monkey.Items.Add(5);
+      _monkey.ThrowingStrategy = new ThrowingStrategy(3, _monkey2, _monkey3);
+      _monkey.TakeTurn();
+
+      Assert.Multiple(() =>
+      {
+        Assert.That(_monkey.Items.Count, Is.EqualTo(0));
+        Assert.True(_monkey2.Items.Contains(3));
+        Assert.True(_monkey3.Items.Contains(5));
       });
     }
 

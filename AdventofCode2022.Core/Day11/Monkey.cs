@@ -36,4 +36,13 @@ public class Monkey
     ThrowingStrategy.Throw(Items.First());
     Items.RemoveAt(0);
   }
+
+  public void TakeTurn()
+  {
+    while (Items.Count > 0)
+    {
+      Inspect();
+      Throw();
+    }
+  }
 }
