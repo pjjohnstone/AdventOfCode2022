@@ -9,6 +9,7 @@ public class MonkeyParserShould
   [SetUp]
   public void Setup()
   {
+    _parser = new MonkeyParser();
     _monkey0 = new Monkey(0, new List<int> { 79, 98 }, new MultiplyStrategy(19));
     _monkey1 = new Monkey(1, new List<int> { 54, 65, 75, 74 }, new AddStrategy(6));
     _monkey2 = new Monkey(2, new List<int> { 79, 60, 97 }, new SelfMultiplyStrategy());
@@ -21,6 +22,7 @@ public class MonkeyParserShould
   private Monkey _monkey2 = null!;
   private Monkey _monkey3 = null!;
   private string[] _inputArray = null!;
+  private MonkeyParser _parser = null!;
 
   private const string SampleText = @"Monkey 0:
   Starting items: 79, 98
@@ -62,7 +64,7 @@ Monkey 3:
       _monkey3
     };
 
-    var resultingMonkeys = MonkeyParser.Monkeys(_inputArray).ToList();
+    var resultingMonkeys = _parser.Monkeys(_inputArray).ToList();
 
     Assert.Multiple(() =>
     {

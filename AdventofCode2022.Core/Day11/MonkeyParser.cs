@@ -2,9 +2,9 @@
 
 namespace AdventOfCode2022.Core.Day11;
 
-public static class MonkeyParser
+public class MonkeyParser : IMonkeyParser
 {
-  public static IEnumerable<Monkey> Monkeys(IEnumerable<string> input)
+  public IEnumerable<Monkey> Monkeys(IEnumerable<string> input)
   {
     var monkeys = new List<Monkey>();
     var throwingStrategyDefinitions = new List<ThrowingStrategyDefinition>();
