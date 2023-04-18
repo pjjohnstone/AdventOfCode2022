@@ -1,3 +1,4 @@
+using System.Text.Json;
 using AdventOfCode2022.Core.Day11.Exceptions;
 using AdventOfCode2022.Core.Day11.InspectionStrategies;
 
@@ -12,11 +13,31 @@ public class Monkey
     _inspectionStrategy = inspectionStrategy;
     Items = items;
     Number = number;
+    ThrowingStrategy = new DefaultThrowingStrategy();
   }
 
-  public ThrowingStrategy? ThrowingStrategy { get; set; }
+  public IThrowingStrategy ThrowingStrategy { get; set; }
   public List<int> Items { get; }
   public int Number { get; }
+
+  private bool Equals(Monkey other)
+  {
+    var thisJson = JsonSerializer.Serialize(this);
+    var otherJson = JsonSerializer.Serialize(other);
+    return thisJson.Equals(otherJson);
+  }
+
+  public override bool Equals(object? obj)
+  {
+    if (ReferenceEquals(null, obj)) return false;
+    if (ReferenceEquals(this, obj)) return true;
+    return obj.GetType() == GetType() && Equals((Monkey)obj);
+  }
+
+  public override int GetHashCode()
+  {
+    return HashCode.Combine(_inspectionStrategy, Items, Number);
+  }
 
   public void Inspect()
   {
@@ -32,7 +53,7 @@ public class Monkey
 
   public void Throw()
   {
-    if (ThrowingStrategy == null) throw new NoThrowingStrategyException("There is no throwing strategy set!");
+    // TODO: Test for no items
     ThrowingStrategy.Throw(Items.First());
     Items.RemoveAt(0);
   }

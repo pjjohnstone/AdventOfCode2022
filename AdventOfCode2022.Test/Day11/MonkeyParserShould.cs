@@ -66,20 +66,6 @@ Monkey 3:
 
     var resultingMonkeys = _parser.Monkeys(_inputArray).ToList();
 
-    Assert.Multiple(() =>
-    {
-      Assert.That(resultingMonkeys[0].Number, Is.EqualTo(expectedMonkeys[0].Number));
-      Assert.That(resultingMonkeys[1].Number, Is.EqualTo(expectedMonkeys[1].Number));
-      Assert.That(resultingMonkeys[2].Number, Is.EqualTo(expectedMonkeys[2].Number));
-      Assert.That(resultingMonkeys[3].Number, Is.EqualTo(expectedMonkeys[3].Number));
-      Assert.That(resultingMonkeys[0].Items, Is.EqualTo(expectedMonkeys[0].Items));
-      Assert.That(resultingMonkeys[1].Items, Is.EqualTo(expectedMonkeys[1].Items));
-      Assert.That(resultingMonkeys[2].Items, Is.EqualTo(expectedMonkeys[2].Items));
-      Assert.That(resultingMonkeys[3].Items, Is.EqualTo(expectedMonkeys[3].Items));
-      Assert.NotNull(resultingMonkeys[0].ThrowingStrategy);
-      Assert.NotNull(resultingMonkeys[1].ThrowingStrategy);
-      Assert.NotNull(resultingMonkeys[2].ThrowingStrategy);
-      Assert.NotNull(resultingMonkeys[3].ThrowingStrategy);
-    });
+    Assert.That(resultingMonkeys, Is.EqualTo(expectedMonkeys));
   }
 }
