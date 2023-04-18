@@ -1,6 +1,6 @@
 namespace AdventOfCode2022.Core.Day11;
 
-public class ThrowingStrategy
+public class ThrowingStrategy : IThrowingStrategy
 {
   private readonly Monkey _falseMonkey;
 
