@@ -53,7 +53,7 @@ public class Monkey
 
   public void Throw()
   {
-    // TODO: Test for no items
+    if (Items.Count == 0) throw new NoItemsException($"Called throw on monkey {Number} but there were no items!");
     ThrowingStrategy.Throw(Items.First());
     Items.RemoveAt(0);
   }

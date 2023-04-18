@@ -60,10 +60,10 @@ public class MonkeyShould
     });
   }
 
-  [Test, Ignore("Refactor this to test for no items")]
+  [Test]
   public void Throw_Exception_If_Throw_And_No_Strategy()
   {
-    Assert.Throws<NoThrowingStrategyException>(() => _monkey.Throw());
+    Assert.Throws<NoItemsException>(() => _monkey.Throw());
   }
 
   [Test]
