@@ -1,5 +1,6 @@
 ﻿using AdventOfCode2022.Core.Day11;
 using AdventOfCode2022.Core.Day11.InspectionStrategies;
+using AdventOfCode2022.Core.Day11.ThrowingStrategies;
 
 namespace AdventOfCode2022.Test.Day11;
 

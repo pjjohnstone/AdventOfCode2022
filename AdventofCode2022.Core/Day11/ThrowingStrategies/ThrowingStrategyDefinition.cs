@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2022.Core.Day11;
+﻿namespace AdventOfCode2022.Core.Day11.ThrowingStrategies;
 
 public record ThrowingStrategyDefinition
 {
