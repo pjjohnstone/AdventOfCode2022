@@ -18,4 +18,12 @@ public class Round
   {
     Monkeys = _parser.Monkeys(_inputData).ToList();
   }
+
+  public void PlayRound()
+  {
+    foreach (var monkey in Monkeys)
+    {
+      monkey.TakeTurn();
+    }
+  }
 }
