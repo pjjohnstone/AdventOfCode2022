@@ -45,6 +45,7 @@ public class Monkey
     var newItemWorry = _inspectionStrategy.Inspect(Items.First()) / 3;
     Items.RemoveAt(0);
     Items.Insert(0, newItemWorry);
+    Inspections += 1;
   }
 
   public void Catch(int itemValue)
@@ -67,4 +68,6 @@ public class Monkey
       Throw();
     }
   }
+
+  public int Inspections { get; private set; }
 }

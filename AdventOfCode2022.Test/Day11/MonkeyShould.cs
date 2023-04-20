@@ -112,6 +112,18 @@ public class MonkeyShould
     Assert.That(monkey1, Is.EqualTo(monkey2));
   }
 
+  [Test]
+  public void Count_Number_Of_Inspections()
+  {
+    _monkey.Items.Add(1);
+    _monkey.Items.Add(2);
+    _monkey.ThrowingStrategy = new ThrowingStrategy(1, _monkey2, _monkey3);
+
+    _monkey.TakeTurn();
+
+    Assert.That(_monkey.Inspections, Is.EqualTo(2));
+  }
+
   private static object[] _inspectCases =
   {
     new object[] { new List<int> { 1, 2 }, new MultiplyStrategy(10), new List<int> { 3, 2 } },
