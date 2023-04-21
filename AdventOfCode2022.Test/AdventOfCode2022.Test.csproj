@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -20,6 +20,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AdventofCode2022.Core\AdventOfCode2022.Core.csproj" />
+    <ProjectReference Include="..\AdventOfCode2022.FSharp\AdventOfCode2022.FSharp.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Day13\" />
   </ItemGroup>
 
 </Project>
