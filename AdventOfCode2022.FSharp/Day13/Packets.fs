@@ -37,9 +37,9 @@ let groupNumbers (block: char list) =
       match commaIndex with
       | Some(i) ->
         let (number,remains) = List.splitAt i block
-        groupNumbersRec remains.Tail numbers@[(intFromCharList number)]
+        groupNumbersRec remains.Tail (numbers@[(intFromCharList number)])
       | None ->
-        groupNumbersRec [] numbers@[(intFromCharList block)]
+        groupNumbersRec [] (numbers@[(intFromCharList block)])
   groupNumbersRec block []
 
 let groups (string: string) =
