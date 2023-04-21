@@ -16,11 +16,10 @@ let trimList chars =
   |> List.tail
   |> List.rev
 
-let toEndOfBlock chars =
-  let index = chars |> List.findIndex (fun c -> c.Equals ']')
+let toEndOfBlock (symbol: char) chars =
+  let index = chars |> List.findIndex (fun c -> c.Equals symbol)
   chars 
   |> List.splitAt index
-  |> fun (x,_) -> x
 
 let intFromCharList (chars: char list) =
   chars
@@ -46,6 +45,26 @@ let groups (string: string) =
   |> Seq.toArray
   |> Array.toList
   |> trimList
+
+let packets (groupsString: char list) =
+  let rec packetsRec (groupsString: char list) groups =
+    match groupsString with
+    | [] -> { Groups = groups }
+    | _ ->
+      match groupsString.Head with
+      | '[' ->
+        let (group,remains) = toEndOfBlock ']' groupsString
+        packetsRec remains.Tail (groups@[{ Values = (groupNumbers group.Tail); Enclosed = true }])
+      | ',' -> 
+        packetsRec groupsString.Tail groups
+      | _ ->
+        match (List.exists (fun c -> c.Equals ',') groupsString) with
+        | true ->
+          let (group,remains) = toEndOfBlock ',' groupsString
+          packetsRec remains.Tail (groups@[{ Values = (groupNumbers group); Enclosed = false }])
+        | false ->
+          packetsRec [] (groups@[{ Values = (groupNumbers groupsString); Enclosed = false }])
+  packetsRec groupsString []
 
 let pairs (input: string[]) =
    input
