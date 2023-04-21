@@ -1,6 +1,4 @@
-﻿using Microsoft.FSharp.Collections;
-
-namespace AdventOfCode2022.Test.Day13;
+﻿namespace AdventOfCode2022.Test.Day13;
 
 [TestFixture]
 public class PacketsShould
