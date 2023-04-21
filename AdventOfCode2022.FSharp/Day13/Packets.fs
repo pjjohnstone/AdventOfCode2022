@@ -16,6 +16,32 @@ let trimList chars =
   |> List.tail
   |> List.rev
 
+let toEndOfBlock chars =
+  let index = chars |> List.findIndex (fun c -> c.Equals ']')
+  chars 
+  |> List.splitAt index
+  |> fun (x,_) -> x
+
+let intFromCharList (chars: char list) =
+  chars
+  |> List.toArray
+  |> System.String.Concat
+  |> int
+
+let groupNumbers (block: char list) =
+  let rec groupNumbersRec (block: char list) (numbers: int list) =
+    match block with
+    | [] -> numbers
+    | _ ->
+      let commaIndex = List.tryFindIndex (fun c -> c.Equals ',') block
+      match commaIndex with
+      | Some(i) ->
+        let (number,remains) = List.splitAt i block
+        groupNumbersRec remains.Tail numbers@[(intFromCharList number)]
+      | None ->
+        groupNumbersRec [] numbers@[(intFromCharList block)]
+  groupNumbersRec block []
+
 let groups (string: string) =
   string
   |> Seq.toArray
