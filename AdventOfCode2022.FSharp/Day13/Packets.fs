@@ -32,11 +32,10 @@ let groupNumbers (block: char list) =
   let rec groupNumbersRec (block: char list) (numbers: int list) =
     match block with
     | [] -> numbers
-    | _ ->
-      let commaIndex = List.tryFindIndex (fun c -> c.Equals ',') block
-      match commaIndex with
-      | Some(i) ->
-        let (number,remains) = List.splitAt i block
+    | _ -> 
+      match (List.tryFindIndex (fun c -> c.Equals ',') block) with
+      | Some(index) ->
+        let (number,remains) = List.splitAt index block
         groupNumbersRec remains.Tail (numbers@[(intFromCharList number)])
       | None ->
         groupNumbersRec [] (numbers@[(intFromCharList block)])
