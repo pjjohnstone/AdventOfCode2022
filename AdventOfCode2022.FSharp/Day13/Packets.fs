@@ -106,3 +106,9 @@ let pairs (input: string array) =
   |> List.filter (fun l -> l.Length > 0)
   |> List.chunkBySize 2
   |> List.map (fun p -> (p[0], p[1]))
+
+let sumIndices results =
+  results
+  |> List.indexed
+  |> List.filter (fun (i,v) -> v = true)
+  |> List.sumBy (fun (i,v) -> i)

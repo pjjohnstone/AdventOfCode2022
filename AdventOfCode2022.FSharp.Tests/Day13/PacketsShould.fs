@@ -1,7 +1,6 @@
 namespace AdventOfCode2022.FSharp.Tests.Day13
 
 open NUnit.Framework
-open System.IO
 
 [<TestFixture>]
 module PacketsShould =
@@ -48,3 +47,14 @@ module PacketsShould =
   [<TestCaseSource("parsingCases")>]
   let ``Parse input data into tuples of strings`` s =
     Packets.pairs s
+
+  let indexSumCases = 
+    [
+      TestCaseData([true;true;false;true]).Returns(4)
+      TestCaseData([false;true;false;true]).Returns(4)
+      TestCaseData([false;false;false;true]).Returns(3)
+    ]
+
+  [<TestCaseSource("indexSumCases")>]
+  let ``Sums indices of correctly ordered packets`` s =
+    Packets.sumIndices s
