@@ -1,76 +1,41 @@
 ﻿module Packets
 
-type Group = {
-  Values: int list
-  Enclosed: bool
+type Result = {
+  Pair: char * char
+  InOrder: bool option
 }
 
-type Packet = {
-  Groups: Group list
-}
+let numberComparison (pair: char * char) =
+  let (left,right) = pair
+  match System.Int32.TryParse (left |> System.String.Concat) with
+  | true,intLeft ->
+    match System.Int32.TryParse (right |> System.String.Concat) with
+    | true,intRight ->
+      match intLeft <= intRight with
+      | true ->
+        { Pair = (left,right); InOrder = Some(true) }
+      | false ->
+        { Pair = (left,right); InOrder = Some(false) }
+    | false,_ ->
+      { Pair = (left,right); InOrder = None }
+  | false,_ ->
+    { Pair = (left,right); InOrder = None }
 
-let trimList chars =
-  chars
-  |> List.tail
-  |> List.rev
-  |> List.tail
-  |> List.rev
+let evaluateRules pair =
+  pair
+  |> numberComparison
 
-let toEndOfBlock (symbol: char) chars =
-  let index = chars |> List.findIndex (fun c -> c.Equals symbol)
-  chars 
-  |> List.splitAt index
-
-let intFromCharList (chars: char list) =
-  chars
-  |> List.toArray
-  |> System.String.Concat
-  |> int
-
-let groupNumbers (block: char list) =
-  let rec groupNumbersRec (block: char list) (numbers: int list) =
-    match block with
-    | [] -> numbers
-    | _ -> 
-      match (List.tryFindIndex (fun c -> c.Equals ',') block) with
-      | Some(index) ->
-        let (number,remains) = List.splitAt index block
-        groupNumbersRec remains.Tail (numbers@[(intFromCharList number)])
-      | None ->
-        groupNumbersRec [] (numbers@[(intFromCharList block)])
-  groupNumbersRec block []
-
-let groups (string: string) =
-  string
-  |> Seq.toArray
-  |> Array.toList
-  |> trimList
-
-let packets (groupsString: char list) =
-  let rec packetsRec (groupsString: char list) groups =
-    match groupsString with
-    | [] -> { Groups = groups }
-    | _ ->
-      match groupsString.Head with
-      | '[' ->
-        let (group,remains) = toEndOfBlock ']' groupsString
-        packetsRec remains.Tail (groups@[{ Values = (groupNumbers group.Tail); Enclosed = true }])
-      | ',' -> 
-        packetsRec groupsString.Tail groups
+let inOrder (pair: string * string) =
+  let rec inOrderRec (pair: char list * char list) =
+    let (left,right) = pair
+    match (left.Head = right.Head) with
+    | true -> 
+      inOrderRec (left.Tail, right.Tail)
+    | false ->
+      match (evaluateRules (left.Head, right.Head)).InOrder with
+      | Some(true) -> true
+      | Some(false) -> false
       | _ ->
-        match (List.exists (fun c -> c.Equals ',') groupsString) with
-        | true ->
-          let (group,remains) = toEndOfBlock ',' groupsString
-          packetsRec remains.Tail (groups@[{ Values = (groupNumbers group); Enclosed = false }])
-        | false ->
-          packetsRec [] (groups@[{ Values = (groupNumbers groupsString); Enclosed = false }])
-  packetsRec groupsString []
-
-let pairs (input: string[]) =
-   input
-   |> Array.toList
-   |> List.chunkBySize 2
-
-let IsInOrder (input: string[]) = 
-  [|true|]
-
+        inOrderRec (left.Tail, right.Tail)
+  let (left,right) = pair
+  inOrderRec (left |> Seq.toArray |> Array.toList, right |> Seq.toArray |> Array.toList)
