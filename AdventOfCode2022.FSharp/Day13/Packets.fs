@@ -5,15 +5,31 @@ type Result = {
   InOrder: bool option
 }
 
-let areSame (pair: char list * char list) =
+let areEmpty result =
+  match result.InOrder with
+  | Some(_) -> result
+  | None ->
+    let (left,right) = result.Pair
+    match left with
+    | [] -> { result with InOrder = Some(true) }
+    | _ ->
+      match right with
+      | [] -> { result with InOrder = Some(false) }
+      | _ ->
+        result
+
+let areSame result =
   let rec areSameRec (pair: char list * char list) =
     let (left,right) = pair
     match left.Head = right.Head with
     | false ->
-      { Pair = pair; InOrder = None }
+      { Pair = (left, right); InOrder = None }
     | true ->
-      areSameRec (left.Tail, right.Tail)    
-  areSameRec pair
+      areSameRec (left.Tail, right.Tail)   
+  match result.InOrder with
+  | Some(_) -> result
+  | None ->
+    areSameRec result.Pair
 
 let numberComparison result =
   match result.InOrder with
@@ -41,22 +57,30 @@ let numberComparison result =
 let findNextNumber result =
   let rec findNextNumberRec result =
     let (left,right) = result.Pair
-    match System.Char.IsNumber left.Head with
-    | true ->
-      match System.Char.IsNumber right.Head with
-      | true ->
-        numberComparison result
-      | false ->
-        findNextNumberRec { Pair = (left, right.Tail); InOrder = None }
-    | false ->
-      findNextNumberRec { Pair = (left.Tail, right); InOrder = None }
+    match right with
+    | [] -> { result with InOrder = Some(false) }
+    | _ ->
+      match left with
+      | [] -> { result with InOrder = Some(true) }
+      | _ ->
+        match System.Char.IsNumber left.Head with
+        | true ->
+          match System.Char.IsNumber right.Head with
+          | true ->
+            numberComparison result
+          | false ->
+            findNextNumberRec { Pair = (left, right.Tail); InOrder = None }
+        | false ->
+          findNextNumberRec { Pair = (left.Tail, right); InOrder = None }
   match result.InOrder with
   | Some(_) -> result
   | None ->
     findNextNumberRec result
 
 let evaluateRules pair =
-  pair
+  let result = { Pair = pair; InOrder = None }
+  result
+  |> areEmpty
   |> areSame
   |> numberComparison
   |> findNextNumber
