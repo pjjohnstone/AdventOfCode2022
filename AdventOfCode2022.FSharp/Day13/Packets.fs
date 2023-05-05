@@ -71,7 +71,11 @@ let findNextNumber result =
           | false ->
             findNextNumberRec { Pair = (left, right.Tail); InOrder = None }
         | false ->
-          findNextNumberRec { Pair = (left.Tail, right); InOrder = None }
+          match System.Char.IsNumber right.Head with
+          | true ->
+            findNextNumberRec { Pair = (left.Tail, right); InOrder = None }
+          | false ->
+            findNextNumberRec { Pair = (left.Tail, right.Tail); InOrder = None }
   match result.InOrder with
   | Some(_) -> result
   | None ->
