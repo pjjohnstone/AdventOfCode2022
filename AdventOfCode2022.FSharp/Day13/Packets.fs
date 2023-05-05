@@ -1,5 +1,7 @@
 ﻿module Packets
 
+open System.IO
+
 type Result = {
   Pair: char list * char list
   InOrder: bool option
@@ -110,5 +112,12 @@ let pairs (input: string array) =
 let sumIndices results =
   results
   |> List.indexed
-  |> List.filter (fun (i,v) -> v = true)
-  |> List.sumBy (fun (i,v) -> i)
+  |> List.filter (fun (_,v) -> v = true)
+  |> List.sumBy (fun (i,_) -> i)
+
+let ProcessSignals path =
+  let inputData = File.ReadAllLines(path)
+  inputData
+  |> pairs
+  |> List.map inOrder
+  |> sumIndices
