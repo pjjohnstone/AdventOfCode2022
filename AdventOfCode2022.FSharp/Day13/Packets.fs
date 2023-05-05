@@ -32,19 +32,43 @@ let numberComparison result =
       | false,_ ->
         { Pair = (left,right); InOrder = None } // right is not a number
     | false,_ ->
-      { Pair = (left,right); InOrder = None } // neither are numbers
+      match System.Char.IsNumber right.Head with
+      | true ->
+        { Pair = (left,right); InOrder = None } // left is not a number
+      | false ->
+        { Pair = (left,right); InOrder = None } // neither are numbers
+
+let findNextNumber result =
+  let rec findNextNumberRec result =
+    let (left,right) = result.Pair
+    match System.Char.IsNumber left.Head with
+    | true ->
+      match System.Char.IsNumber right.Head with
+      | true ->
+        numberComparison result
+      | false ->
+        findNextNumberRec { Pair = (left, right.Tail); InOrder = None }
+    | false ->
+      findNextNumberRec { Pair = (left.Tail, right); InOrder = None }
+  match result.InOrder with
+  | Some(_) -> result
+  | None ->
+    findNextNumberRec result
 
 let evaluateRules pair =
   pair
   |> areSame
   |> numberComparison
+  |> findNextNumber
 
 let inOrder (pair: string * string) =
-  let (left,right) = pair
-  let charPairs = (left |> Seq.toArray |> Array.toList, right |> Seq.toArray |> Array.toList)
-  let result = evaluateRules charPairs
-  match result.InOrder with
-  | Some(true) -> true
-  | Some(false) -> false
-  | _ -> true
+  let rec inOrderRec (pair: string * string) =
+    let (left,right) = pair
+    let charPairs = (left |> Seq.toArray |> Array.toList, right |> Seq.toArray |> Array.toList)
+    let result = evaluateRules charPairs
+    match result.InOrder with
+    | Some(true) -> true
+    | Some(false) -> false
+    | None -> inOrderRec (left[1..], right[1..])
+  inOrderRec pair
   
