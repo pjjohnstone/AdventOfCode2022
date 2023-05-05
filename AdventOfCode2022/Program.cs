@@ -13,3 +13,5 @@ for (int i = 0; i < 20; i++)
 var topMonkeys = round.Monkeys.OrderByDescending(m => m.Inspections).Take(2);
 Console.WriteLine($"Monkey business this round is: {topMonkeys.Select(m => m.Inspections).Aggregate((x,y) => x * y)}");
 
+Console.WriteLine("Day13, Part1");
+inputData = File.ReadAllLines(Path.Combine(Environment.CurrentDirectory, "Day13/input.txt")).Where(s => !string.IsNullOrEmpty(s));

@@ -9,4 +9,10 @@
     <Compile Include="Day13\Packets.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Day13\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

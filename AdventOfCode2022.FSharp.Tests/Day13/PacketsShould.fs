@@ -1,6 +1,7 @@
 namespace AdventOfCode2022.FSharp.Tests.Day13
 
 open NUnit.Framework
+open System.IO
 
 [<TestFixture>]
 module PacketsShould =
@@ -24,3 +25,26 @@ module PacketsShould =
   [<TestCaseSource("inOrderTestCases")>]
   let ``Compare left and right packets`` s =
     Packets.inOrder s
+
+  let parsingCases = 
+    [
+      TestCaseData(
+        [|
+          "[1,1,3,1,1]"
+          "[1,1,5,1,1]"
+          ""
+          "[[1],[2,3,4]]"
+          "[[1],4]"
+          ""
+        |]
+      ).Returns(
+        [
+          ("[1,1,3,1,1]", "[1,1,5,1,1]")
+          ("[[1],[2,3,4]]", "[[1],4]")
+        ]
+      )
+    ]
+
+  [<TestCaseSource("parsingCases")>]
+  let ``Parse input data into tuples of strings`` s =
+    Packets.pairs s

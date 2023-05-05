@@ -100,3 +100,9 @@ let inOrder (pair: string * string) =
     | None -> inOrderRec (left[1..], right[1..])
   inOrderRec pair
   
+let pairs (input: string array) =
+  input
+  |> Array.toList
+  |> List.filter (fun l -> l.Length > 0)
+  |> List.chunkBySize 2
+  |> List.map (fun p -> (p[0], p[1]))
