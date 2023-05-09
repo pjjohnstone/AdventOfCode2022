@@ -70,6 +70,15 @@ module PacketsShould =
         Packets.Symbol.Number(3)
         Packets.Symbol.Char(']')
       ])
+      TestCaseData("[1,2,10]").Returns([
+        Packets.Symbol.Char('[')
+        Packets.Symbol.Number(1)
+        Packets.Symbol.Char(',')
+        Packets.Symbol.Number(2)
+        Packets.Symbol.Char(',')
+        Packets.Symbol.Number(10)
+        Packets.Symbol.Char(']')
+      ])
     ]
 
   [<TestCaseSource("symbolOrNumberCases")>]
