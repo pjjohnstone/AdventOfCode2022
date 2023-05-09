@@ -56,5 +56,22 @@ module PacketsShould =
     ]
 
   [<TestCaseSource("indexSumCases")>]
-  let ``Sums indices of correctly ordered packets`` s =
+  let ``Sum indices of correctly ordered packets`` s =
     Packets.sumIndices s
+
+  let symbolOrNumberCases =
+    [
+      TestCaseData("[1,1,3]").Returns([
+        Packets.Symbol.Char('[')
+        Packets.Symbol.Number(1)
+        Packets.Symbol.Char(',')
+        Packets.Symbol.Number(1)
+        Packets.Symbol.Char(',')
+        Packets.Symbol.Number(3)
+        Packets.Symbol.Char(']')
+      ])
+    ]
+
+  [<TestCaseSource("symbolOrNumberCases")>]
+  let ``Convert char list to list of Symbols`` s =
+    Packets.charToSymbols s

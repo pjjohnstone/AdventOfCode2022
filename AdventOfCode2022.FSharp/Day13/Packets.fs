@@ -7,6 +7,23 @@ type Result = {
   InOrder: bool option
 }
 
+type Symbol =
+  | Char of char
+  | Number of int
+
+let charOrNumber s =
+  match System.Char.IsNumber s with
+  | true ->
+    Number (s |> System.String.Concat |> System.Int32.Parse)
+  | false ->
+    Char s
+
+let charToSymbols (string: string) =
+  string
+  |> Seq.toArray
+  |> Array.toList
+  |> List.map charOrNumber
+
 let areEmpty result =
   match result.InOrder with
   | Some(_) -> result
