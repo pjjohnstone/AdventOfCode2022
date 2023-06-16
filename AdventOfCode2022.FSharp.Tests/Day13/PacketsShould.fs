@@ -1,6 +1,7 @@
 namespace AdventOfCode2022.FSharp.Tests.Day13
 
 open NUnit.Framework
+open Packets
 
 [<TestFixture>]
 module PacketsShould =
@@ -23,7 +24,7 @@ module PacketsShould =
 
   [<TestCaseSource("inOrderTestCases")>]
   let ``Compare left and right packets`` s =
-    Packets.inOrder s
+    inOrder s
 
   let parsingCases = 
     [
@@ -46,7 +47,7 @@ module PacketsShould =
 
   [<TestCaseSource("parsingCases")>]
   let ``Parse input data into tuples of strings`` s =
-    Packets.pairs s
+    pairs s
 
   let indexSumCases = 
     [
@@ -57,30 +58,30 @@ module PacketsShould =
 
   [<TestCaseSource("indexSumCases")>]
   let ``Sum indices of correctly ordered packets`` s =
-    Packets.sumIndices s
+    sumIndices s
 
   let symbolOrNumberCases =
     [
       TestCaseData("[1,1,3]").Returns([
-        Packets.Symbol.Char('[')
-        Packets.Symbol.Number(1)
-        Packets.Symbol.Char(',')
-        Packets.Symbol.Number(1)
-        Packets.Symbol.Char(',')
-        Packets.Symbol.Number(3)
-        Packets.Symbol.Char(']')
+        Char('[')
+        Number(1)
+        Char(',')
+        Number(1)
+        Char(',')
+        Number(3)
+        Char(']')
       ])
       TestCaseData("[1,2,10]").Returns([
-        Packets.Symbol.Char('[')
-        Packets.Symbol.Number(1)
-        Packets.Symbol.Char(',')
-        Packets.Symbol.Number(2)
-        Packets.Symbol.Char(',')
-        Packets.Symbol.Number(10)
-        Packets.Symbol.Char(']')
+        Char('[')
+        Number(1)
+        Char(',')
+        Number(2)
+        Char(',')
+        Number(10)
+        Char(']')
       ])
     ]
 
   [<TestCaseSource("symbolOrNumberCases")>]
   let ``Convert char list to list of Symbols`` s =
-    Packets.charToSymbols s
+    charToSymbols s

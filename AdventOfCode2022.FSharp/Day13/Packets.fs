@@ -2,14 +2,14 @@
 
 open System.IO
 
-type Result = {
-  Pair: char list * char list
-  InOrder: bool option
-}
-
 type Symbol =
   | Char of char
   | Number of int
+
+type Result = {
+  Pair: Symbol list * Symbol list
+  InOrder: bool option
+}
 
 let charToint (c: char) =
   c |> System.String.Concat |> System.Int32.Parse
@@ -63,7 +63,7 @@ let areEmpty result =
         result
 
 let areSame result =
-  let rec areSameRec (pair: char list * char list) =
+  let rec areSameRec (pair: Symbol list * Symbol list) =
     let (left,right) = pair
     match left.Head = right.Head with
     | false ->
@@ -80,22 +80,22 @@ let numberComparison result =
   | Some(_) -> result
   | None ->
     let (left,right) = result.Pair
-    match System.Int32.TryParse (left.Head |> System.String.Concat) with
-    | true,intLeft ->
-      match System.Int32.TryParse (right.Head |> System.String.Concat) with
-      | true,intRight ->
+    match left.Head with
+    | Number intLeft ->
+      match right.Head with
+      | Number intRight ->
         match intLeft <= intRight with
         | true ->
           { Pair = (left,right); InOrder = Some(true) } // both numbers left smaller
         | false ->
           { Pair = (left,right); InOrder = Some(false) } // both numbers left bigger
-      | false,_ ->
+      | Char _ ->
         { Pair = (left,right); InOrder = None } // right is not a number
-    | false,_ ->
-      match System.Char.IsNumber right.Head with
-      | true ->
+    | Char _ ->
+      match right.Head with
+      | Number _ ->
         { Pair = (left,right); InOrder = None } // left is not a number
-      | false ->
+      | Char _ ->
         { Pair = (left,right); InOrder = None } // neither are numbers
 
 let findNextNumber result =
@@ -107,18 +107,18 @@ let findNextNumber result =
       match left with
       | [] -> { result with InOrder = Some(true) }
       | _ ->
-        match System.Char.IsNumber left.Head with
-        | true ->
-          match System.Char.IsNumber right.Head with
-          | true ->
+        match left.Head with
+        | Number _ ->
+          match right.Head with
+          | Number _ ->
             numberComparison result
-          | false ->
+          | Char _ ->
             findNextNumberRec { Pair = (left, right.Tail); InOrder = None }
-        | false ->
-          match System.Char.IsNumber right.Head with
-          | true ->
+        | Char _ ->
+          match right.Head with
+          | Number _ ->
             findNextNumberRec { Pair = (left.Tail, right); InOrder = None }
-          | false ->
+          | Char _ ->
             findNextNumberRec { Pair = (left.Tail, right.Tail); InOrder = None }
   match result.InOrder with
   | Some(_) -> result
@@ -136,7 +136,7 @@ let evaluateRules pair =
 let inOrder (pair: string * string) =
   let rec inOrderRec (pair: string * string) =
     let (left,right) = pair
-    let charPairs = (left |> Seq.toArray |> Array.toList, right |> Seq.toArray |> Array.toList)
+    let charPairs = (charToSymbols left, charToSymbols right)
     let result = evaluateRules charPairs
     match result.InOrder with
     | Some(true) -> true
