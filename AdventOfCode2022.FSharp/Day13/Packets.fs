@@ -11,18 +11,43 @@ type Symbol =
   | Char of char
   | Number of int
 
+let charToint (c: char) =
+  c |> System.String.Concat |> System.Int32.Parse
+
+let stringToInt s =
+  s |> System.Int32.Parse
+
 let charOrNumber s =
   match System.Char.IsNumber s with
   | true ->
-    Number (s |> System.String.Concat |> System.Int32.Parse)
+    Number (charToint s)
   | false ->
     Char s
+
+let rec charsToSymbols chars (symbols: Symbol list) pendingNumber =
+  match chars with
+  | [] -> symbols
+  | head::tail ->
+    match System.Char.IsNumber head with
+    | false ->
+      match pendingNumber with
+      | "" ->
+        charsToSymbols tail (List.append symbols [charOrNumber head]) ""
+      | _ ->
+        charsToSymbols tail (List.append symbols [(Number (stringToInt pendingNumber)); charOrNumber head]) ""
+    | true ->
+      match pendingNumber with
+      | "" ->
+        charsToSymbols tail symbols (string head)
+      | _ ->
+        charsToSymbols tail symbols (pendingNumber + string head)
 
 let charToSymbols (string: string) =
   string
   |> Seq.toArray
   |> Array.toList
-  |> List.map charOrNumber
+  |> fun l ->
+    charsToSymbols l [] ""
 
 let areEmpty result =
   match result.InOrder with
