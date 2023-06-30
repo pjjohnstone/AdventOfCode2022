@@ -20,6 +20,8 @@ module PacketsShould =
       TestCaseData("[]", "[3]").Returns(true)
       TestCaseData("[[[]]]", "[[]]").Returns(false)
       TestCaseData("[1,[2,[3,[4,[5,6,7]]]],8,9]", "[1,[2,[3,[4,[5,6,0]]]],8,9]").Returns(false)
+      TestCaseData("[[[[4,7,7],0,4,[6,3,3,7,10],2],2,[[3]]],[]]", "[[[[1,4,8],[3,3,1,4]]]]").Returns(false)
+      TestCaseData("[[7,6],[],[[5],0,10,[7,9,[7],0]]]", "[[[[6,9,0]],0]]").Returns(false)
     ]
 
   [<TestCaseSource("inOrderTestCases")>]
