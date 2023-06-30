@@ -155,7 +155,7 @@ let sumIndices results =
   results
   |> List.indexed
   |> List.filter (fun (_,v) -> v = true)
-  |> List.sumBy (fun (i,_) -> i)
+  |> List.sumBy (fun (i,_) -> i + 1)
 
 let ProcessSignals path =
   let inputData = File.ReadAllLines(path)

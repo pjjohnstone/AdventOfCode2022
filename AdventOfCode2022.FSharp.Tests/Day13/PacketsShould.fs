@@ -51,9 +51,9 @@ module PacketsShould =
 
   let indexSumCases = 
     [
-      TestCaseData([true;true;false;true]).Returns(4)
-      TestCaseData([false;true;false;true]).Returns(4)
-      TestCaseData([false;false;false;true]).Returns(3)
+      TestCaseData([true;true;false;true]).Returns(7)
+      TestCaseData([false;true;false;true]).Returns(6)
+      TestCaseData([false;false;false;true]).Returns(4)
     ]
 
   [<TestCaseSource("indexSumCases")>]
